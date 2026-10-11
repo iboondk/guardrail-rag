@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "guardrail-rag"
+version = "0.1.0"
+description = "Multi-tenant RAG with PII redaction, prompt-injection guardrails and a cross-tenant leak eval harness."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "iboondk" }]
+dependencies = [
+    "llama-index-core>=0.11",
+    "qdrant-client>=1.12",
+    "pydantic>=2",
+    "pydantic-settings>=2",
+    "httpx",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+ollama = ["llama-index-llms-ollama"]
+anthropic = ["llama-index-llms-anthropic"]
+groq = ["llama-index-llms-groq"]
+rerank = ["sentence-transformers"]
+
+[project.scripts]
+guardrail-rag = "guardrail_rag.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/guardrail_rag"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# Some filesystems (e.g. exFAT) mark every file executable; EXE002 is noise there.
+ignore = ["EXE002"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
